@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Spin, message, Typography } from 'antd';
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const effectRan = useRef(false);
@@ -56,5 +56,17 @@ export default function AuthCallbackPage() {
         <Typography.Paragraph className="mt-4">正在登录...</Typography.Paragraph>
       </div>
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        <Spin size="large" />
+      </div>
+    }>
+      <AuthCallbackContent />
+    </Suspense>
   );
 }
