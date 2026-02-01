@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
 import connectToDatabase from '@/lib/db';
 import Submission from '@/models/Submission';
+import { FilterQuery } from 'mongoose';
+import { ISubmission } from '@/types';
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,7 +18,7 @@ export async function GET(req: NextRequest) {
     const dateFrom = searchParams.get('dateFrom');
     const dateTo = searchParams.get('dateTo');
 
-    const query: any = {};
+    const query: FilterQuery<ISubmission> = {};
 
     if (formType) {
       query.formType = formType;

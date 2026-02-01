@@ -5,12 +5,13 @@ import { Table, Button, Typography, message, Tag } from 'antd';
 import { useRouter } from 'next/navigation';
 import { EyeOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { ISubmission } from '@/types';
 
 const { Title } = Typography;
 
 export default function SubmissionsPage() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ISubmission[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -59,7 +60,7 @@ export default function SubmissionsPage() {
     {
       title: '操作',
       key: 'action',
-      render: (_: any, record: any) => (
+      render: (_: unknown, record: ISubmission) => (
         <Button 
           type="link" 
           icon={<EyeOutlined />} 

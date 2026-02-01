@@ -10,9 +10,11 @@ const { Title } = Typography;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
+import { ISubmission } from '@/types';
+
 export default function AdminSubmissionsPage() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ISubmission[]>([]);
   const [filters, setFilters] = useState({
     keyword: '',
     formType: '',
@@ -65,7 +67,7 @@ export default function AdminSubmissionsPage() {
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text: string) => dayjs(text).format('YYYY-MM-DD HH:mm'),
-      sorter: (a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      sorter: (a: ISubmission, b: ISubmission) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     },
     {
       title: '表单类型',
@@ -80,7 +82,7 @@ export default function AdminSubmissionsPage() {
         { text: '本科', value: 'undergrad' },
         { text: '专科', value: 'junior' },
       ],
-      onFilter: (value: any, record: any) => record.formType === value,
+      onFilter: (value: boolean | React.Key, record: ISubmission) => record.formType === value,
     },
     {
       title: '姓名',
@@ -101,12 +103,12 @@ export default function AdminSubmissionsPage() {
       title: '总分',
       dataIndex: ['data', 'exam', 'totalScore'],
       key: 'totalScore',
-      sorter: (a: any, b: any) => (a.data?.exam?.totalScore || 0) - (b.data?.exam?.totalScore || 0),
+      sorter: (a: ISubmission, b: ISubmission) => (a.data?.exam?.totalScore || 0) - (b.data?.exam?.totalScore || 0),
     },
     {
       title: '操作',
       key: 'action',
-      render: (_: any, record: any) => (
+      render: (_: unknown, record: ISubmission) => (
         <Button 
           type="link" 
           icon={<EyeOutlined />} 

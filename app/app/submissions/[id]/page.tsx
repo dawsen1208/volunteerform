@@ -1,17 +1,18 @@
 'use client';
 
 import React, { useEffect, useState, use } from 'react';
-import { Card, Typography, Descriptions, message, Button, Spin, Tag, Divider } from 'antd';
+import { Card, Typography, Descriptions, message, Button, Spin, Tag } from 'antd';
 import { useRouter } from 'next/navigation';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { ISubmission } from '@/types';
 
 const { Title } = Typography;
 
 export default function SubmissionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<ISubmission | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function SubmissionDetailPage({ params }: { params: Promise<{ id:
   if (!data) return <div className="text-center p-12">未找到记录</div>;
 
   const { formType, createdAt, data: formData } = data;
-  const { profile, health, exam, preference, majors, undergradSpecial, juniorSpecial } = formData;
+  const { profile, exam } = formData;
 
   return (
     <div>

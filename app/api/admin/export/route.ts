@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
 import connectToDatabase from '@/lib/db';
 import Submission from '@/models/Submission';
+import { FilterQuery } from 'mongoose';
+import { ISubmission } from '@/types';
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,7 +15,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const formType = searchParams.get('formType');
 
-    const query: any = {};
+    const query: FilterQuery<ISubmission> = {};
     if (formType) {
       query.formType = formType;
     }
@@ -34,7 +36,7 @@ export async function GET(req: NextRequest) {
       'majors',
     ].join(',');
 
-    const rows = submissions.map((sub: any) => {
+    const rows = submissions.map((sub: ISubmission) => {
       const data = sub.data || {};
       const profile = data.profile || {};
       const exam = data.exam || {};

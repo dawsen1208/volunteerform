@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import BaseFormSections from '@/components/BaseFormSections';
 import MajorsTable from '@/components/MajorsTable';
 import JuniorSpecialSection from '@/components/JuniorSpecialSection';
+import { IFormData } from '@/types';
 
 const { Title } = Typography;
 
@@ -14,7 +15,7 @@ export default function JuniorFormPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: IFormData) => {
     try {
       setLoading(true);
       const res = await fetch('/api/forms/submit', {
