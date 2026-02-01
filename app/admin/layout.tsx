@@ -14,7 +14,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
       router.push('/login');
-    } catch (error) {
+    } catch {
       message.error('退出失败');
     }
   };

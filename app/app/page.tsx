@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Typography, Button, Space } from 'antd';
+import { Card, Typography, Button } from 'antd';
 import { useRouter } from 'next/navigation';
 import { FormOutlined } from '@ant-design/icons';
 

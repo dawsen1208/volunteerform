@@ -1,6 +1,5 @@
 import React from 'react';
-import { Form, Input, Select, DatePicker, InputNumber, Radio, Row, Col, Card, Divider } from 'antd';
-import { IFormData } from '@/types';
+import { Form, Input, Select, InputNumber, Row, Col, Card, Divider, Radio } from 'antd';
 
 const { Option } = Select;
 const { TextArea } = Input;

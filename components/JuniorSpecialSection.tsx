@@ -1,7 +1,5 @@
 import React from 'react';
-import { Form, Select, Card, Radio, Input } from 'antd';
-
-const { Option } = Select;
+import { Form, Card, Radio, Input } from 'antd';
 
 export default function JuniorSpecialSection() {
   return (
