@@ -84,7 +84,7 @@ export default function BaseFormSections() {
             </Form.Item>
           </Col>
         </Row>
-        <Divider orientation="start">家庭信息</Divider>
+        <Divider titlePlacement="start">家庭信息</Divider>
         <Row gutter={16}>
           <Col span={8}>
             <Form.Item name={['profile', 'parents', 'fatherName']} label="父亲姓名">
@@ -226,7 +226,7 @@ export default function BaseFormSections() {
             </Form.Item>
           </Col>
           <Col span={24}>
-             <Divider orientation="start" style={{ marginTop: 0 }}>单科成绩</Divider>
+             <Divider titlePlacement="start" style={{ marginTop: 0 }}>单科成绩</Divider>
           </Col>
           {['chinese', 'math', 'english', 'physics', 'chemistry', 'biology', 'history', 'politics', 'geography'].map((sub) => (
             <Col span={4} key={sub}>
