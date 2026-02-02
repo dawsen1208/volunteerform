@@ -29,6 +29,12 @@ export default function Home() {
               专科志愿单
             </Button>
           </Link>
+
+          <Link href="/dashboard" className="block">
+            <Button type="dashed" size="large" block className="h-12 text-lg">
+              个人中心
+            </Button>
+          </Link>
         </div>
 
         <div className="hidden md:flex flex-col items-center justify-center mt-8">

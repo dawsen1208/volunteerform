@@ -1,15 +1,32 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { jwtVerify } from 'jose';
 
-export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
+const JWT_SECRET = process.env.JWT_SECRET || 'default-secret-key-change-it';
 
-  // Protect all /admin routes except /admin/login
-  if (path.startsWith('/admin') && path !== '/admin/login') {
-    const adminSession = request.cookies.get('admin_session');
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
-    if (!adminSession) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
+  // Protect /dashboard and /form routes
+  // Users must be logged in to access dashboard or fill forms (to ensure data linkage)
+  if (pathname.startsWith('/dashboard') || pathname.startsWith('/form')) {
+    const token = request.cookies.get('user_token')?.value;
+
+    if (!token) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('returnUrl', pathname + request.nextUrl.search);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    try {
+      const secret = new TextEncoder().encode(JWT_SECRET);
+      await jwtVerify(token, secret);
+      return NextResponse.next();
+    } catch (error) {
+      // Invalid token
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('returnUrl', pathname + request.nextUrl.search);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
@@ -17,5 +34,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/dashboard/:path*', '/form/:path*'],
 };
