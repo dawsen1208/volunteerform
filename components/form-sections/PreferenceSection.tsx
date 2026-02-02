@@ -1,10 +1,13 @@
 import React from 'react';
-import { Form, Input, Select, Row, Col, Card } from 'antd';
+import { Form, Input, Select, Row, Col, Card, List, Button, Tag, Typography, Space } from 'antd';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { TextArea } = Input;
+const { Text } = Typography;
 
 export default function PreferenceSection() {
+  const form = Form.useFormInstance();
   const allProvinces = [
     '北京', '天津', '河北', '山西', '内蒙古', '辽宁', '吉林', '黑龙江',
     '上海', '江苏', '浙江', '安徽', '福建', '江西', '山东',
@@ -14,16 +17,81 @@ export default function PreferenceSection() {
     '台湾', '香港', '澳门'
   ];
 
+  const moveProvince = (index: number, direction: 'up' | 'down') => {
+    const currentProvinces = form.getFieldValue(['preference', 'intendedProvinces']) || [];
+    if (index < 0 || index >= currentProvinces.length) return;
+    
+    const newProvinces = [...currentProvinces];
+    if (direction === 'up' && index > 0) {
+      [newProvinces[index - 1], newProvinces[index]] = [newProvinces[index], newProvinces[index - 1]];
+    } else if (direction === 'down' && index < newProvinces.length - 1) {
+      [newProvinces[index], newProvinces[index + 1]] = [newProvinces[index + 1], newProvinces[index]];
+    }
+    
+    form.setFieldValue(['preference', 'intendedProvinces'], newProvinces);
+    // Trigger re-render by forcing update or just relying on form state
+    // Since we are inside Form.Item shouldUpdate, it should update automatically? 
+    // No, setFieldValue doesn't trigger re-render of the component unless we use useWatch or Form.Item dependencies.
+    // The Form.Item below has dependencies so it will re-render.
+  };
+
   return (
     <Card title="报考意向 (Preference)" className="mb-6 shadow-sm">
       <Row gutter={16}>
         <Col span={24}>
-          <Form.Item name={['preference', 'intendedProvinces']} label="意向省份">
+          <Form.Item name={['preference', 'intendedProvinces']} label="意向省份" extra="请按意向优先级顺序选择，或使用下方箭头调整顺序">
             <Select mode="tags" placeholder="请输入或选择省份" style={{ width: '100%' }}>
               {allProvinces.map(p => (
                   <Option key={p} value={p}>{p}</Option>
               ))}
             </Select>
+          </Form.Item>
+          
+          {/* Sorting UI */}
+          <Form.Item
+            noStyle
+            shouldUpdate={(prev, current) => 
+              prev.preference?.intendedProvinces !== current.preference?.intendedProvinces
+            }
+          >
+            {({ getFieldValue }) => {
+              const provinces = getFieldValue(['preference', 'intendedProvinces']) || [];
+              if (provinces.length === 0) return null;
+
+              return (
+                <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                  <Text strong className="mb-2 block">已选省份优先级排序（点击箭头调整）：</Text>
+                  <List
+                    size="small"
+                    dataSource={provinces}
+                    renderItem={(item: string, index: number) => (
+                      <List.Item>
+                        <Space className="w-full justify-between">
+                          <Space>
+                            <Tag color="blue" className="mr-0">{index + 1}</Tag>
+                            <Text>{item}</Text>
+                          </Space>
+                          <Space>
+                            <Button 
+                              size="small" 
+                              icon={<ArrowUpOutlined />} 
+                              disabled={index === 0}
+                              onClick={() => moveProvince(index, 'up')}
+                            />
+                            <Button 
+                              size="small" 
+                              icon={<ArrowDownOutlined />} 
+                              disabled={index === provinces.length - 1}
+                              onClick={() => moveProvince(index, 'down')}
+                            />
+                          </Space>
+                        </Space>
+                      </List.Item>
+                    )}
+                  />
+                </div>
+              );
+            }}
           </Form.Item>
         </Col>
         <Col xs={24} sm={12}>
