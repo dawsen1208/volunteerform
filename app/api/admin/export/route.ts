@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSessionUser } from '@/lib/auth';
+import { verifyAdmin } from '@/lib/admin';
 import connectToDatabase from '@/lib/db';
 import Submission from '@/models/Submission';
 import { FilterQuery } from 'mongoose';
@@ -7,8 +7,8 @@ import { ISubmission } from '@/types';
 
 export async function GET(req: NextRequest) {
   try {
-    const user = await getSessionUser(req);
-    if (!user || user.role !== 'admin') {
+    const isAdmin = await verifyAdmin(req);
+    if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
