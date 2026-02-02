@@ -7,16 +7,10 @@ import bcrypt from 'bcryptjs';
 export async function POST(req: Request) {
   try {
     await connectToDatabase();
-    const { phone, code, password } = await req.json();
+    const { phone, password } = await req.json();
 
-    if (!phone || !code || !password) {
+    if (!phone || !password) {
       return NextResponse.json({ error: '请填写所有必填项' }, { status: 400 });
-    }
-
-    // Verify code
-    const validCode = await VerificationCode.findOne({ phone, code });
-    if (!validCode) {
-      return NextResponse.json({ error: '验证码无效或已过期' }, { status: 400 });
     }
 
     // Check if user exists
@@ -34,9 +28,6 @@ export async function POST(req: Request) {
       phone,
       passwordHash
     });
-
-    // Clean up used code
-    await VerificationCode.deleteOne({ _id: validCode._id });
 
     return NextResponse.json({ success: true, message: '注册成功' });
   } catch (error) {
