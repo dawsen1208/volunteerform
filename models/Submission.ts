@@ -15,14 +15,22 @@ const SubmissionSchema = new Schema<IFormSubmission>({
       address: String,
       idNumber: { type: String, required: true },
       examCandidateNumber: { type: String, required: true },
-      candidateType: String,
+      candidateType: { type: String, enum: ['普通', '艺术', '体育', '其他'] },
       referrer: String,
-      familyInfo: String,
+      family: {
+        fatherName: String,
+        motherName: String,
+        fatherWork: String,
+        motherWork: String,
+        fatherJob: String,
+        motherJob: String,
+      },
       schoolClassTeacher: String,
     },
     health: {
       medicalConclusion: String,
-      myopia: String,
+      leftEye: String,
+      rightEye: String,
       colorVision: String,
       hepatitisB: Boolean,
       limbDisability: Boolean,
@@ -32,6 +40,7 @@ const SubmissionSchema = new Schema<IFormSubmission>({
     exam: {
       totalScore: { type: Number, required: true },
       rankPosition: { type: Number, required: true },
+      selectedSubjects: [String],
       subjectScores: {
         chinese: Number,
         math: Number,
@@ -61,6 +70,9 @@ const SubmissionSchema = new Schema<IFormSubmission>({
     }],
     undergradSpecial: {
       universityLevel: [String],
+      earlyBatchIntentLine1: [String],
+      earlyBatchIntentLine2Type: String,
+      earlyBatchIntentLine2School: String,
       earlyBatchIntent: String,
       specialPlans: [String],
       freeStudentIntent: String,

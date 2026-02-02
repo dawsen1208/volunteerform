@@ -1,13 +1,22 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Typography, Descriptions, Card, Tag, Button, Spin, message, Table } from 'antd';
+import { Typography, Descriptions, Card, Tag, Button, Spin, message, Table, Space } from 'antd';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { IFormSubmission } from '@/types';
 
 const { Title } = Typography;
+
+function getSubjectName(key: string) {
+  const map: Record<string, string> = {
+    chinese: '语文', math: '数学', english: '英语',
+    physics: '物理', chemistry: '化学', biology: '生物',
+    history: '历史', politics: '政治', geography: '地理', tech: '技术'
+  };
+  return map[key] || key;
+}
 
 export default function SubmissionDetailPage() {
   const { id } = useParams();
@@ -43,11 +52,20 @@ export default function SubmissionDetailPage() {
   if (!submission) return <div className="text-center p-10">未找到提交记录</div>;
 
   const { data, formType, createdAt } = submission;
-  const { profile, health, exam, preference, majors, undergradSpecial, juniorSpecial } = data;
+  // Defensive destructuring with default values to prevent crashes on partial data
+  const { 
+    profile = {} as any, 
+    health = {} as any, 
+    exam = {} as any, 
+    preference = {} as any, 
+    majors = [], 
+    undergradSpecial, 
+    juniorSpecial 
+  } = data || {};
 
   return (
     <div className="max-w-4xl mx-auto">
-      <Button icon={<ArrowLeftOutlined />} onClick={() => router.back()} className="mb-4">
+      <Button icon={<ArrowLeftOutlined />} onClick={() => router.push('/admin/submissions')} className="mb-4">
         返回列表
       </Button>
 
@@ -81,9 +99,12 @@ export default function SubmissionDetailPage() {
           <Descriptions.Item label="学校/班主任">{profile.schoolClassTeacher || '-'}</Descriptions.Item>
           <Descriptions.Item label="推荐人">{profile.referrer || '-'}</Descriptions.Item>
           <Descriptions.Item label="地址" span={3}>{profile.address || '-'}</Descriptions.Item>
-          <Descriptions.Item label="家庭信息" span={3}>
-            <pre className="whitespace-pre-wrap font-sans">{profile.familyInfo || '-'}</pre>
-          </Descriptions.Item>
+          <Descriptions.Item label="父亲姓名">{profile.family?.fatherName || '-'}</Descriptions.Item>
+          <Descriptions.Item label="母亲姓名">{profile.family?.motherName || '-'}</Descriptions.Item>
+          <Descriptions.Item label="父亲工作单位">{profile.family?.fatherWork || '-'}</Descriptions.Item>
+          <Descriptions.Item label="母亲工作单位">{profile.family?.motherWork || '-'}</Descriptions.Item>
+          <Descriptions.Item label="父亲职务">{profile.family?.fatherJob || '-'}</Descriptions.Item>
+          <Descriptions.Item label="母亲职务">{profile.family?.motherJob || '-'}</Descriptions.Item>
         </Descriptions>
       </Card>
 
@@ -91,7 +112,8 @@ export default function SubmissionDetailPage() {
       <Card title="体检信息 (Health)" className="mb-6 shadow-sm">
         <Descriptions bordered column={{ xs: 1, sm: 2 }}>
           <Descriptions.Item label="体检结论">{health.medicalConclusion || '-'}</Descriptions.Item>
-          <Descriptions.Item label="近视情况">{health.myopia || '-'}</Descriptions.Item>
+          <Descriptions.Item label="左眼视力">{health.leftEye || '-'}</Descriptions.Item>
+          <Descriptions.Item label="右眼视力">{health.rightEye || '-'}</Descriptions.Item>
           <Descriptions.Item label="色盲色弱">{health.colorVision || '-'}</Descriptions.Item>
           <Descriptions.Item label="乙肝">{health.hepatitisB ? '有' : '无'}</Descriptions.Item>
           <Descriptions.Item label="肢体残疾">{health.limbDisability ? '有' : '无'}</Descriptions.Item>
@@ -106,6 +128,9 @@ export default function SubmissionDetailPage() {
           <Descriptions.Item label="总分" labelStyle={{ fontWeight: 'bold' }}>{exam.totalScore}</Descriptions.Item>
           <Descriptions.Item label="位次" labelStyle={{ fontWeight: 'bold' }}>{exam.rankPosition}</Descriptions.Item>
           <Descriptions.Item label="英语口语">{exam.oralEnglish || '-'}</Descriptions.Item>
+          <Descriptions.Item label="选考科目">
+            {exam.selectedSubjects?.map((s: string) => <Tag key={s}>{getSubjectName(s)}</Tag>) || '-'}
+          </Descriptions.Item>
           <Descriptions.Item label="单科成绩" span={4}>
             {exam.subjectScores ? (
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
@@ -144,8 +169,8 @@ export default function SubmissionDetailPage() {
       {/* 5. 意向专业 */}
       <Card title="意向专业 (Majors)" className="mb-6 shadow-sm">
         <Table
-          dataSource={majors}
-          rowKey={(record) => record.majorName + record.category}
+          dataSource={majors || []}
+          rowKey={(record, index) => `${record.category}-${record.majorName}-${index}`}
           pagination={false}
           columns={[
             { title: '专业大类', dataIndex: 'category', key: 'category' },
@@ -162,7 +187,21 @@ export default function SubmissionDetailPage() {
             <Descriptions.Item label="院校层次偏好">
               {undergradSpecial.universityLevel?.map((l: string) => <Tag key={l}>{l}</Tag>) || '-'}
             </Descriptions.Item>
-            <Descriptions.Item label="提前批意向">{undergradSpecial.earlyBatchIntent || '-'}</Descriptions.Item>
+            <Descriptions.Item label="提前批意向（一段线以上）">
+              {undergradSpecial.earlyBatchIntentLine1?.map((i: string) => <Tag key={i}>{i}</Tag>) || '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label="提前批意向（一段线以下二段线以上）">
+              {undergradSpecial.earlyBatchIntentLine2Type ? (
+                <>
+                  <Tag>{undergradSpecial.earlyBatchIntentLine2Type}</Tag>
+                  {undergradSpecial.earlyBatchIntentLine2School && (
+                    <span className="ml-2 text-gray-600">
+                      (院校/专业: {undergradSpecial.earlyBatchIntentLine2School})
+                    </span>
+                  )}
+                </>
+              ) : '-'}
+            </Descriptions.Item>
             <Descriptions.Item label="专项计划">
               {undergradSpecial.specialPlans?.map((p: string) => <Tag key={p}>{p}</Tag>) || '-'}
             </Descriptions.Item>
@@ -188,14 +227,3 @@ export default function SubmissionDetailPage() {
     </div>
   );
 }
-
-function getSubjectName(key: string) {
-  const map: Record<string, string> = {
-    chinese: '语文', math: '数学', english: '英语',
-    physics: '物理', chemistry: '化学', biology: '生物',
-    history: '历史', politics: '政治', geography: '地理', tech: '技术'
-  };
-  return map[key] || key;
-}
-
-import { Space } from 'antd';

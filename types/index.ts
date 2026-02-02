@@ -42,6 +42,14 @@ export interface IProfile {
   examCandidateNumber: string;
   candidateType?: string; // 普通/艺/体...
   referrer?: string; // 推荐人
+  family?: {
+    fatherName?: string;
+    motherName?: string;
+    fatherWork?: string;
+    motherWork?: string;
+    fatherJob?: string;
+    motherJob?: string;
+  };
   familyInfo?: string; // 家庭信息 (JSON or text description)
   schoolClassTeacher?: string; // 学校/班主任
 }
@@ -59,6 +67,7 @@ export interface IHealth {
 export interface IExam {
   totalScore: number;
   rankPosition: number;
+  selectedSubjects?: string[]; // New: Selected subjects for exam
   subjectScores?: {
     chinese?: number;
     math?: number;
@@ -91,7 +100,10 @@ export interface IMajorRow {
 
 export interface IUndergradSpecial {
   universityLevel?: string[]; // 985/211/双一流
-  earlyBatchIntent?: string; // 提前批意向
+  earlyBatchIntentLine1?: string[]; // 一段线以上意向 (New)
+  earlyBatchIntentLine2Type?: string; // 一段线以下二段线以上类型 (New)
+  earlyBatchIntentLine2School?: string; // 确定院校及专业 (New)
+  earlyBatchIntent?: string; // Deprecated: keep for backward compatibility
   specialPlans?: string[]; // 专项计划 (强基/综合评价...)
   freeStudentIntent?: string; // 公费生意向
 }

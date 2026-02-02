@@ -1,0 +1,86 @@
+"use client";
+
+import { useState } from 'react';
+import { Form, Input, Button, Card, Typography, message } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
+const { Title } = Typography;
+
+export default function LoginPage() {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const onFinish = async (values: any) => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        message.success('登录成功');
+        window.location.href = '/dashboard'; // Force reload to update auth state
+      } else {
+        message.error(data.error || '登录失败');
+      }
+    } catch (error) {
+      message.error('网络错误');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <Card className="w-full max-w-sm shadow-lg">
+        <div className="text-center mb-6">
+          <Title level={3}>用户登录</Title>
+        </div>
+
+        <Form
+          name="login"
+          onFinish={onFinish}
+          layout="vertical"
+        >
+          <Form.Item
+            name="phone"
+            rules={[{ required: true, message: '请输入手机号' }]}
+          >
+            <Input 
+              prefix={<UserOutlined />} 
+              placeholder="手机号" 
+              size="large"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: '请输入密码' }]}
+          >
+            <Input.Password 
+              prefix={<LockOutlined />} 
+              placeholder="密码" 
+              size="large"
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block size="large" loading={loading}>
+              登录
+            </Button>
+          </Form.Item>
+          
+          <div className="text-center">
+             <Link href="/register">没有账号？去注册</Link>
+          </div>
+        </Form>
+      </Card>
+    </div>
+  );
+}

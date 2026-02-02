@@ -15,6 +15,8 @@ import { IFormSubmission } from '@/types';
 export default function AdminSubmissionsPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<IFormSubmission[]>([]);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     keyword: '',
     formType: '',
@@ -25,14 +27,17 @@ export default function AdminSubmissionsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetchData();
+    fetchData(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchData = async (currentFilters = filters) => {
+  const fetchData = async (page = 1, currentFilters = filters) => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
+      params.append('page', page.toString());
+      params.append('pageSize', '20');
+      
       if (currentFilters.keyword) params.append('keyword', currentFilters.keyword);
       if (currentFilters.formType) params.append('formType', currentFilters.formType);
       if (currentFilters.province) params.append('province', currentFilters.province);
@@ -42,7 +47,9 @@ export default function AdminSubmissionsPage() {
       const res = await fetch(`/api/admin/submissions?${params.toString()}`);
       const json = await res.json();
       if (res.ok) {
-        setData(json);
+        setData(json.items || []);
+        setTotal(json.total || 0);
+        setCurrentPage(page);
       } else {
         message.error('加载失败');
       }
@@ -55,7 +62,7 @@ export default function AdminSubmissionsPage() {
   };
 
   const handleSearch = () => {
-    fetchData();
+    fetchData(1);
   };
 
   const handleExport = () => {
@@ -186,7 +193,13 @@ export default function AdminSubmissionsPage() {
         dataSource={data} 
         rowKey="_id" 
         loading={loading}
-        pagination={{ pageSize: 20 }}
+        pagination={{ 
+          current: currentPage,
+          pageSize: 20, 
+          total: total,
+          onChange: (page) => fetchData(page),
+          showTotal: (total) => `共 ${total} 条`
+        }}
       />
     </div>
   );

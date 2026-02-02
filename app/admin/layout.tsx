@@ -12,8 +12,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      router.push('/login');
+      await fetch('/api/admin/logout', { method: 'POST' });
+      message.success('已退出登录');
+      // Use window.location.href to force a full reload and ensure clean state
+      window.location.href = '/';
     } catch {
       message.error('退出失败');
     }
