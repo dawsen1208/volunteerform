@@ -1,36 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSessionUser } from '@/lib/auth';
 import connectToDatabase from '@/lib/db';
 import Submission from '@/models/Submission';
+import AccessToken from '@/models/AccessToken';
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getSessionUser(req);
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const body = await req.json();
-    const { formType, data } = body;
+    const { token, formType, data } = body;
 
-    if (!formType || !data) {
-      return NextResponse.json({ error: 'Missing formType or data' }, { status: 400 });
-    }
-
-    // Basic validation
-    if (!data.profile?.name || !data.profile?.studentPhone || !data.profile?.idNumber || !data.profile?.examCandidateNumber || !data.exam?.totalScore || !data.exam?.rankPosition) {
-       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    if (!token || !formType || !data) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     await connectToDatabase();
 
+    // Verify token again before submission
+    const accessToken = await AccessToken.findOne({ token }).exec();
+    
+    if (!accessToken) {
+      return NextResponse.json({ error: 'Invalid token' }, { status: 403 });
+    }
+
+    if (new Date() > accessToken.expiresAt) {
+      return NextResponse.json({ error: 'Token expired' }, { status: 403 });
+    }
+
+    if (accessToken.formType !== formType) {
+      return NextResponse.json({ error: 'Token form type mismatch' }, { status: 400 });
+    }
+
+    // Create submission
     const submission = await Submission.create({
-      userId: user._id,
+      token,
       formType,
       data,
     });
 
-    return NextResponse.json({ submissionId: submission._id });
+    return NextResponse.json({ success: true, id: submission._id });
   } catch (error) {
     console.error('Submission error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

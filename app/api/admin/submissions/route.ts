@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSessionUser } from '@/lib/auth';
+import { verifyAdmin } from '@/lib/admin';
 import connectToDatabase from '@/lib/db';
 import Submission from '@/models/Submission';
-import { FilterQuery } from 'mongoose';
-import { ISubmission } from '@/types';
 
 export async function GET(req: NextRequest) {
   try {
-    const user = await getSessionUser(req);
-    if (!user || user.role !== 'admin') {
+    if (!verifyAdmin(req)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
@@ -18,7 +15,7 @@ export async function GET(req: NextRequest) {
     const dateFrom = searchParams.get('dateFrom');
     const dateTo = searchParams.get('dateTo');
 
-    const query: FilterQuery<ISubmission> = {};
+    const query: any = {};
 
     if (formType) {
       query.formType = formType;
@@ -49,7 +46,7 @@ export async function GET(req: NextRequest) {
 
     const submissions = await Submission.find(query)
       .sort({ createdAt: -1 })
-      .limit(1000) // Limit for safety
+      .limit(1000)
       .exec();
 
     return NextResponse.json(submissions);

@@ -1,20 +1,36 @@
-export type Role = 'user' | 'admin';
 export type FormType = 'undergrad' | 'junior';
 
-export interface IUser {
+export interface IAccessToken {
   _id: string;
-  wechatOpenId: string;
-  unionId?: string;
-  role: Role;
+  token: string;
+  formType: FormType;
+  used: boolean; // Optional: track if used, or allow multiple uses? User didn't specify one-time use, but "expiresAt" implies time-bound. 
+                 // User requirement: "校验 token 是否存在且未过期". Doesn't say "consume". Assuming reusable until expiry.
+  expiresAt: Date;
+  createdAt: Date;
+  description?: string; // e.g. "For Class 3 Students"
+}
+
+export interface ISubmission {
+  _id: string;
+  token: string; // The token string used to submit
+  formType: FormType;
+  data: IFormData;
   createdAt: Date;
 }
 
-export interface ISession {
-  _id: string;
-  token: string;
-  userId: string; // ObjectId string
-  expiresAt: Date;
-  createdAt: Date;
+export interface IFormData {
+  profile: IProfile;
+  health: IHealth;
+  scores: ISubjectScores;
+  // Specific fields
+  undergrad?: {
+    interviewIntent: string; // e.g. "意向约谈时间"
+    targetMajor?: string;
+  };
+  junior?: {
+    targetColleges?: string;
+  };
 }
 
 export interface IProfile {
