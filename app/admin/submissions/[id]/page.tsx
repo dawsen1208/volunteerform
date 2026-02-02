@@ -5,14 +5,14 @@ import { Typography, Descriptions, Card, Tag, Button, Spin, message, Table } fro
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { ISubmission } from '@/types';
+import { IFormSubmission } from '@/types';
 
 const { Title } = Typography;
 
 export default function SubmissionDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const [submission, setSubmission] = useState<ISubmission | null>(null);
+  const [submission, setSubmission] = useState<IFormSubmission | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -112,7 +112,7 @@ export default function SubmissionDetailPage() {
                 {Object.entries(exam.subjectScores).map(([subject, score]) => (
                   <div key={subject} className="border p-2 rounded bg-gray-50">
                     <span className="text-gray-500 mr-2">{getSubjectName(subject)}:</span>
-                    <span className="font-medium">{score}</span>
+                    <span className="font-medium">{score as number}</span>
                   </div>
                 ))}
               </div>
@@ -125,15 +125,15 @@ export default function SubmissionDetailPage() {
       <Card title="报考意向 (Preference)" className="mb-6 shadow-sm">
         <Descriptions bordered column={1}>
           <Descriptions.Item label="意向省份">
-            {preference.intendedProvinces?.map(p => <Tag key={p}>{p}</Tag>) || '-'}
+            {preference.intendedProvinces?.map((p: string) => <Tag key={p}>{p}</Tag>) || '-'}
           </Descriptions.Item>
           <Descriptions.Item label="院校性质">
-            {preference.schoolNature?.map(n => <Tag key={n}>{n}</Tag>) || '-'}
+            {preference.schoolNature?.map((n: string) => <Tag key={n}>{n}</Tag>) || '-'}
           </Descriptions.Item>
           <Descriptions.Item label="学费区间">{preference.tuitionRange || '-'}</Descriptions.Item>
           <Descriptions.Item label="户口性质">{preference.hukou || '-'}</Descriptions.Item>
           <Descriptions.Item label="读研/就业">
-            {preference.careerPlan?.map(c => <Tag key={c}>{c}</Tag>) || '-'}
+            {preference.careerPlan?.map((c: string) => <Tag key={c}>{c}</Tag>) || '-'}
           </Descriptions.Item>
           <Descriptions.Item label="备注">
             <pre className="whitespace-pre-wrap font-sans">{preference.remarks || '-'}</pre>
@@ -160,11 +160,11 @@ export default function SubmissionDetailPage() {
         <Card title="本科扩展信息" className="mb-6 shadow-sm">
           <Descriptions bordered column={1}>
             <Descriptions.Item label="院校层次偏好">
-              {undergradSpecial.universityLevel?.map(l => <Tag key={l}>{l}</Tag>) || '-'}
+              {undergradSpecial.universityLevel?.map((l: string) => <Tag key={l}>{l}</Tag>) || '-'}
             </Descriptions.Item>
             <Descriptions.Item label="提前批意向">{undergradSpecial.earlyBatchIntent || '-'}</Descriptions.Item>
             <Descriptions.Item label="专项计划">
-              {undergradSpecial.specialPlans?.map(p => <Tag key={p}>{p}</Tag>) || '-'}
+              {undergradSpecial.specialPlans?.map((p: string) => <Tag key={p}>{p}</Tag>) || '-'}
             </Descriptions.Item>
             <Descriptions.Item label="公费生意向">{undergradSpecial.freeStudentIntent || '-'}</Descriptions.Item>
           </Descriptions>

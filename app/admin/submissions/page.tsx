@@ -10,7 +10,7 @@ const { Title } = Typography;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-import { ISubmission } from '@/types';
+import { IFormSubmission } from '@/types';
 
 export default function AdminSubmissionsPage() {
   const [loading, setLoading] = useState(true);
