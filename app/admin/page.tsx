@@ -28,7 +28,7 @@ export default function AdminLoginPage() {
       } else {
         message.error('密钥错误');
       }
-    } catch (error) {
+    } catch {
       message.error('验证请求失败');
     } finally {
       setLoading(false);

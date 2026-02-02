@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Layout, Menu, Button, Table, Tag, message, Tabs, Card, InputNumber, Select, Input, Descriptions, Space } from 'antd';
+import { Layout, Button, Table, Tag, message, Tabs, Card, InputNumber, Select, Input, Space } from 'antd';
 import { LogoutOutlined, ReloadOutlined, PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
+import { useCallback } from 'react';
 
 const { Header, Content } = Layout;
 
@@ -24,17 +25,7 @@ export default function AdminDashboard() {
   const [genDesc, setGenDesc] = useState('');
   const [genLoading, setGenLoading] = useState(false);
 
-  useEffect(() => {
-    const key = localStorage.getItem('adminKey');
-    if (!key) {
-      router.push('/admin');
-      return;
-    }
-    setAdminKey(key);
-    fetchData(key);
-  }, [router, activeTab]);
-
-  const fetchData = async (key: string) => {
+  const fetchData = useCallback(async (key: string) => {
     setLoading(true);
     try {
       if (activeTab === 'submissions') {
@@ -49,14 +40,25 @@ export default function AdminDashboard() {
         setTokens(data);
       }
     } catch (error) {
-      message.error('获取数据失败或密钥失效');
       if ((error as Error).message === 'Auth failed') {
         router.push('/admin');
+      } else {
+        message.error('获取数据失败或密钥失效');
       }
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab, router]);
+
+  useEffect(() => {
+    const key = localStorage.getItem('adminKey');
+    if (!key) {
+      router.push('/admin');
+      return;
+    }
+    setAdminKey(key);
+    fetchData(key);
+  }, [router, activeTab, fetchData]);
 
   const handleLogout = () => {
     localStorage.removeItem('adminKey');
@@ -84,7 +86,7 @@ export default function AdminDashboard() {
       } else {
         message.error('生成失败');
       }
-    } catch (error) {
+    } catch {
       message.error('网络错误');
     } finally {
       setGenLoading(false);
@@ -96,6 +98,7 @@ export default function AdminDashboard() {
      
      // Simple CSV export logic
      const headers = ['提交时间', '类型', '姓名', '电话', '考号', 'Token'];
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
      const rows = submissions.map((s: any) => [
          new Date(s.createdAt).toLocaleString(),
          s.formType === 'undergrad' ? '本科' : '专科',
@@ -116,6 +119,7 @@ export default function AdminDashboard() {
      document.body.removeChild(link);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const submissionColumns: ColumnsType<any> = [
     { title: '姓名', dataIndex: ['data', 'profile', 'name'], key: 'name' },
     { title: '电话', dataIndex: ['data', 'profile', 'studentPhone'], key: 'phone' },
@@ -129,6 +133,7 @@ export default function AdminDashboard() {
     { title: 'Token', dataIndex: 'token', key: 'token', ellipsis: true },
   ];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tokenColumns: ColumnsType<any> = [
     { title: 'Token', dataIndex: 'token', key: 'token', copyable: true },
     { 

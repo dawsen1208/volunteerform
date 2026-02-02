@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
     const dateFrom = searchParams.get('dateFrom');
     const dateTo = searchParams.get('dateTo');
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const query: any = {};
 
     if (formType) {
@@ -49,7 +50,14 @@ export async function GET(req: NextRequest) {
       .limit(1000)
       .exec();
 
-    return NextResponse.json(submissions);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return NextResponse.json(submissions.map((s: any) => ({
+      _id: s._id,
+      token: s.token,
+      formType: s.formType,
+      data: s.data,
+      createdAt: s.createdAt,
+    })));
   } catch (error) {
     console.error('Admin fetch submissions error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

@@ -43,7 +43,7 @@ function FormContent({ type }: { type: FormType }) {
         } else {
           setTokenError(data.message || 'Token 无效或已过期');
         }
-      } catch (error) {
+      } catch {
         setTokenError('验证失败，请稍后重试');
       } finally {
         setVerifying(false);
