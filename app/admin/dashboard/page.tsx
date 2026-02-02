@@ -135,7 +135,12 @@ export default function AdminDashboard() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tokenColumns: ColumnsType<any> = [
-    { title: 'Token', dataIndex: 'token', key: 'token', copyable: true },
+    { 
+      title: 'Token', 
+      dataIndex: 'token', 
+      key: 'token', 
+      render: (text) => <Typography.Text copyable>{text}</Typography.Text> 
+    },
     { 
       title: '类型', 
       dataIndex: 'formType', 
