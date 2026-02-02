@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Typography, Descriptions, Card, Divider, Tag, Button, Spin, message, Table } from 'antd';
+import { Typography, Descriptions, Card, Tag, Button, Spin, message, Table } from 'antd';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';

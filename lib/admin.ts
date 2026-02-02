@@ -21,7 +21,7 @@ export async function createAdminSession() {
   return { token, expiresAt };
 }
 
-export async function verifyAdmin(req: NextRequest): Promise<boolean> {
+export async function verifyAdmin(): Promise<boolean> {
   try {
     await connectToDatabase();
     const cookieStore = await cookies();

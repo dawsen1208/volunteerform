@@ -5,7 +5,7 @@ import Submission from '@/models/Submission';
 import { FilterQuery } from 'mongoose';
 import { IFormSubmission } from '@/types';
 
-function escapeCsv(field: any): string {
+function escapeCsv(field: unknown): string {
     if (field === undefined || field === null) return '';
     const stringField = String(field);
     if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
@@ -16,7 +16,7 @@ function escapeCsv(field: any): string {
 
 export async function GET(req: NextRequest) {
   try {
-    const isAuthenticated = await verifyAdmin(req);
+    const isAuthenticated = await verifyAdmin();
     if (!isAuthenticated) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

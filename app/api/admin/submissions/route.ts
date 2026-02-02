@@ -7,7 +7,7 @@ import { IFormSubmission } from '@/types';
 
 export async function GET(req: NextRequest) {
   try {
-    const isAuthenticated = await verifyAdmin(req);
+    const isAuthenticated = await verifyAdmin();
     if (!isAuthenticated) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
