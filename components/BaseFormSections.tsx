@@ -150,7 +150,7 @@ export default function BaseFormSections() {
             </Form.Item>
           </Col>
         </Row>
-        <Divider orientation="left">单科成绩</Divider>
+        <Divider>单科成绩</Divider>
         <Row gutter={16}>
           <Col xs={12} sm={4}>
             <Form.Item name={['exam', 'subjectScores', 'chinese']} label="语文">

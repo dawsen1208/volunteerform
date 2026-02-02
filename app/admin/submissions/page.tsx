@@ -14,7 +14,7 @@ import { IFormSubmission } from '@/types';
 
 export default function AdminSubmissionsPage() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<ISubmission[]>([]);
+  const [data, setData] = useState<IFormSubmission[]>([]);
   const [filters, setFilters] = useState({
     keyword: '',
     formType: '',
@@ -75,7 +75,7 @@ export default function AdminSubmissionsPage() {
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text: string) => dayjs(text).format('YYYY-MM-DD HH:mm'),
-      sorter: (a: ISubmission, b: ISubmission) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      sorter: (a: IFormSubmission, b: IFormSubmission) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     },
     {
       title: '表单类型',
@@ -90,7 +90,7 @@ export default function AdminSubmissionsPage() {
         { text: '本科', value: 'undergrad' },
         { text: '专科', value: 'junior' },
       ],
-      onFilter: (value: boolean | React.Key, record: ISubmission) => record.formType === value,
+      onFilter: (value: boolean | React.Key, record: IFormSubmission) => record.formType === value,
     },
     {
       title: '姓名',
@@ -111,7 +111,7 @@ export default function AdminSubmissionsPage() {
       title: '总分',
       dataIndex: ['data', 'exam', 'totalScore'],
       key: 'totalScore',
-      sorter: (a: ISubmission, b: ISubmission) => (a.data?.exam?.totalScore || 0) - (b.data?.exam?.totalScore || 0),
+      sorter: (a: IFormSubmission, b: IFormSubmission) => (a.data?.exam?.totalScore || 0) - (b.data?.exam?.totalScore || 0),
     },
     {
       title: '意向省份',
@@ -123,7 +123,7 @@ export default function AdminSubmissionsPage() {
     {
       title: '操作',
       key: 'action',
-      render: (_: unknown, record: ISubmission) => (
+      render: (_: unknown, record: IFormSubmission) => (
         <Button 
           type="link" 
           icon={<EyeOutlined />} 
