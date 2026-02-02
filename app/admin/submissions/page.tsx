@@ -18,6 +18,7 @@ export default function AdminSubmissionsPage() {
   const [filters, setFilters] = useState({
     keyword: '',
     formType: '',
+    province: '',
     dateFrom: '',
     dateTo: '',
   });
@@ -34,6 +35,7 @@ export default function AdminSubmissionsPage() {
       const params = new URLSearchParams();
       if (currentFilters.keyword) params.append('keyword', currentFilters.keyword);
       if (currentFilters.formType) params.append('formType', currentFilters.formType);
+      if (currentFilters.province) params.append('province', currentFilters.province);
       if (currentFilters.dateFrom) params.append('dateFrom', currentFilters.dateFrom);
       if (currentFilters.dateTo) params.append('dateTo', currentFilters.dateTo);
 
@@ -58,7 +60,12 @@ export default function AdminSubmissionsPage() {
 
   const handleExport = () => {
     const params = new URLSearchParams();
+    if (filters.keyword) params.append('keyword', filters.keyword);
     if (filters.formType) params.append('formType', filters.formType);
+    if (filters.province) params.append('province', filters.province);
+    if (filters.dateFrom) params.append('dateFrom', filters.dateFrom);
+    if (filters.dateTo) params.append('dateTo', filters.dateTo);
+    
     window.open(`/api/admin/export?${params.toString()}`, '_blank');
   };
 
@@ -107,6 +114,13 @@ export default function AdminSubmissionsPage() {
       sorter: (a: ISubmission, b: ISubmission) => (a.data?.exam?.totalScore || 0) - (b.data?.exam?.totalScore || 0),
     },
     {
+      title: '意向省份',
+      dataIndex: ['data', 'preference', 'intendedProvinces'],
+      key: 'intendedProvinces',
+      render: (provinces: string[]) => provinces ? provinces.join(', ') : '-',
+      ellipsis: true,
+    },
+    {
       title: '操作',
       key: 'action',
       render: (_: unknown, record: ISubmission) => (
@@ -137,6 +151,13 @@ export default function AdminSubmissionsPage() {
             style={{ width: 200 }} 
             value={filters.keyword}
             onChange={(e) => setFilters({ ...filters, keyword: e.target.value })}
+            onPressEnter={handleSearch}
+          />
+          <Input 
+            placeholder="意向省份" 
+            style={{ width: 120 }} 
+            value={filters.province}
+            onChange={(e) => setFilters({ ...filters, province: e.target.value })}
             onPressEnter={handleSearch}
           />
           <Select 

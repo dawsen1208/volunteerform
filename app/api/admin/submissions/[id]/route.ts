@@ -8,24 +8,22 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const isAdmin = await verifyAdmin(req);
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    const isAuthenticated = await verifyAdmin(req);
+    if (!isAuthenticated) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await params;
-
     await connectToDatabase();
 
-    const submission = await Submission.findById(id).exec();
-
+    const submission = await Submission.findById(id);
     if (!submission) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Submission not found' }, { status: 404 });
     }
 
     return NextResponse.json(submission);
   } catch (error) {
-    console.error('Admin fetch submission error:', error);
+    console.error('Fetch submission detail error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

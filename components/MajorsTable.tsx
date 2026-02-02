@@ -15,12 +15,12 @@ export default function MajorsTable() {
               columns={[
                 {
                   title: '专业大类',
-                  dataIndex: 'name', // Form.List field name (index)
+                  dataIndex: 'category', // Form.List field name (index)
                   key: 'category',
                   render: (_, field) => (
                     <Form.Item
                       {...field}
-                      name={[field.name, 'majorCategory']}
+                      name={[field.name, 'category']}
                       noStyle
                     >
                       <Input placeholder="专业大类" />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Select, InputNumber, Row, Col, Card, Divider, Radio } from 'antd';
+import { Form, Input, Select, InputNumber, Row, Col, Card, Divider, Radio, Checkbox } from 'antd';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -7,73 +7,68 @@ const { TextArea } = Input;
 export default function BaseFormSections() {
   return (
     <>
+      {/* 1. 基本信息 */}
       <Card title="基本信息 (Profile)" className="mb-6 shadow-sm">
         <Row gutter={16}>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'name']} label="姓名" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8}>
-            <Form.Item name={['profile', 'gender']} label="性别">
+          <Col xs={24} sm={8}>
+            <Form.Item name={['profile', 'gender']} label="性别" rules={[{ required: true }]}>
               <Select>
                 <Option value="男">男</Option>
                 <Option value="女">女</Option>
-                <Option value="其他/未说明">其他/未说明</Option>
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'ethnicity']} label="民族">
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'birthDate']} label="出生日期">
               <Input placeholder="YYYY-MM-DD" />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'heightCm']} label="身高(cm)">
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'weightKg']} label="体重(kg)">
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'studentPhone']} label="学生电话" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'idNumber']} label="身份证号" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'examCandidateNumber']} label="考生号" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'candidateType']} label="考生类型">
-              <Select>
-                <Option value="普通">普通</Option>
-                <Option value="艺">艺</Option>
-                <Option value="体">体</Option>
-                <Option value="其他">其他</Option>
-              </Select>
+              <Input placeholder="普通/艺/体/其他" />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'schoolClassTeacher']} label="学校及班主任">
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['profile', 'referrer']} label="推荐人">
               <Input />
             </Form.Item>
@@ -83,192 +78,156 @@ export default function BaseFormSections() {
               <Input />
             </Form.Item>
           </Col>
-        </Row>
-        <Divider titlePlacement="start">家庭信息</Divider>
-        <Row gutter={16}>
-          <Col span={8}>
-            <Form.Item name={['profile', 'parents', 'fatherName']} label="父亲姓名">
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item name={['profile', 'parents', 'motherName']} label="母亲姓名">
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item name={['profile', 'parents', 'parentsOccupation']} label="父母职业">
-              <Input />
+          <Col span={24}>
+            <Form.Item name={['profile', 'familyInfo']} label="家庭信息 (父母姓名、职业等)">
+              <TextArea rows={3} placeholder="请填写父母姓名、工作单位、职务等信息" />
             </Form.Item>
           </Col>
         </Row>
       </Card>
 
+      {/* 2. 体检信息 */}
       <Card title="体检信息 (Health)" className="mb-6 shadow-sm">
         <Row gutter={16}>
-          <Col span={8}>
-            <Form.Item name={['health', 'physicalStatusNormal']} label="身体状况正常" valuePropName="checked">
-              <Radio.Group>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
-            </Form.Item>
-          </Col>
-          <Col span={16}>
+          <Col xs={24} sm={12}>
             <Form.Item name={['health', 'medicalConclusion']} label="体检结论">
               <Input />
             </Form.Item>
           </Col>
-          <Col span={24}>
-            <Form.Item label="视力情况" style={{ marginBottom: 0 }}>
-              <Row gutter={16}>
-                <Col span={6}>
-                  <Form.Item name={['health', 'myopia', 'has']} label="近视" valuePropName="checked" noStyle>
-                    <Radio.Group>
-                      <Radio value={true}>是</Radio>
-                      <Radio value={false}>否</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                </Col>
-                <Col span={9}>
-                  <Form.Item name={['health', 'myopia', 'leftDegree']} label="左眼度数">
-                    <Input placeholder="如 4.8" />
-                  </Form.Item>
-                </Col>
-                <Col span={9}>
-                  <Form.Item name={['health', 'myopia', 'rightDegree']} label="右眼度数">
-                    <Input placeholder="如 5.0" />
-                  </Form.Item>
-                </Col>
-              </Row>
+          <Col xs={24} sm={12}>
+            <Form.Item name={['health', 'myopia']} label="近视情况">
+              <Input placeholder="如：左4.8 右5.0" />
             </Form.Item>
           </Col>
-          <Col span={4}>
-            <Form.Item name={['health', 'leftHanded']} label="左撇子" valuePropName="checked">
-              <Radio.Group>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
+          <Col xs={24} sm={8}>
+            <Form.Item name={['health', 'colorVision']} label="色盲色弱">
+              <Input placeholder="无/色盲/色弱" />
             </Form.Item>
           </Col>
-          <Col span={4}>
-            <Form.Item name={['health', 'colorBlind']} label="色盲" valuePropName="checked">
-              <Radio.Group>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
-            </Form.Item>
-          </Col>
-          <Col span={4}>
-            <Form.Item name={['health', 'colorWeak']} label="色弱" valuePropName="checked">
-              <Radio.Group>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
-            </Form.Item>
-          </Col>
-          <Col span={4}>
-            <Form.Item name={['health', 'monochromeIncomplete']} label="单色不全" valuePropName="checked">
-              <Radio.Group>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
-            </Form.Item>
-          </Col>
-          <Col span={4}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['health', 'hepatitisB']} label="乙肝" valuePropName="checked">
-              <Radio.Group>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
+               <Checkbox>有乙肝病史</Checkbox>
             </Form.Item>
           </Col>
-          <Col span={4}>
-            <Form.Item name={['health', 'limbDisability']} label="肢体残疾" valuePropName="checked">
-              <Radio.Group>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
+          <Col xs={24} sm={8}>
+            <Form.Item name={['health', 'limbDisability']} label="肢体" valuePropName="checked">
+               <Checkbox>肢体残疾</Checkbox>
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={12}>
             <Form.Item name={['health', 'heartHistory']} label="心脏病史">
-              <Select>
-                <Option value="有">有</Option>
-                <Option value="无">无</Option>
-                <Option value="不详">不详</Option>
-              </Select>
+              <Input placeholder="无/有/不详" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item name={['health', 'others']} label="其他病史">
+              <Input />
             </Form.Item>
           </Col>
         </Row>
       </Card>
 
-      <Card title="高考成绩 (Exam)" className="mb-6 shadow-sm">
+      {/* 3. 考试成绩 */}
+      <Card title="考试成绩 (Exam)" className="mb-6 shadow-sm">
         <Row gutter={16}>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['exam', 'totalScore']} label="总分" rules={[{ required: true }]}>
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['exam', 'rankPosition']} label="位次" rules={[{ required: true }]}>
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={8}>
             <Form.Item name={['exam', 'oralEnglish']} label="英语口语">
               <Select>
                 <Option value="合格">合格</Option>
                 <Option value="不合格">不合格</Option>
                 <Option value="未参加">未参加</Option>
-                <Option value="不详">不详</Option>
               </Select>
             </Form.Item>
           </Col>
-          <Col span={24}>
-             <Divider titlePlacement="start" style={{ marginTop: 0 }}>单科成绩</Divider>
+        </Row>
+        <Divider orientation="start">单科成绩</Divider>
+        <Row gutter={16}>
+          <Col xs={12} sm={4}>
+            <Form.Item name={['exam', 'subjectScores', 'chinese']} label="语文">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
           </Col>
-          {['chinese', 'math', 'english', 'physics', 'chemistry', 'biology', 'history', 'politics', 'geography'].map((sub) => (
-            <Col span={4} key={sub}>
-              <Form.Item name={['exam', 'subjectScores', sub]} label={
-                {
-                  chinese: '语文', math: '数学', english: '英语',
-                  physics: '物理', chemistry: '化学', biology: '生物',
-                  history: '历史', politics: '政治', geography: '地理'
-                }[sub]
-              }>
-                <InputNumber style={{ width: '100%' }} />
-              </Form.Item>
-            </Col>
-          ))}
-          <Col span={24}>
-            <Form.Item name={['exam', 'advantageSubjects']} label="优势学科">
-              <Input />
+          <Col xs={12} sm={4}>
+            <Form.Item name={['exam', 'subjectScores', 'math']} label="数学">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={4}>
+            <Form.Item name={['exam', 'subjectScores', 'english']} label="英语">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={4}>
+            <Form.Item name={['exam', 'subjectScores', 'physics']} label="物理">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={4}>
+            <Form.Item name={['exam', 'subjectScores', 'chemistry']} label="化学">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={4}>
+            <Form.Item name={['exam', 'subjectScores', 'biology']} label="生物">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={4}>
+            <Form.Item name={['exam', 'subjectScores', 'history']} label="历史">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={4}>
+            <Form.Item name={['exam', 'subjectScores', 'politics']} label="政治">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={4}>
+            <Form.Item name={['exam', 'subjectScores', 'geography']} label="地理">
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={4}>
+            <Form.Item name={['exam', 'subjectScores', 'tech']} label="技术">
+              <InputNumber style={{ width: '100%' }} />
             </Form.Item>
           </Col>
         </Row>
       </Card>
 
+      {/* 4. 报考意向 */}
       <Card title="报考意向 (Preference)" className="mb-6 shadow-sm">
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item name={['preference', 'intendedProvinces']} label="意向省份">
-              <Select mode="tags" placeholder="输入省份后回车" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item name={['preference', 'schoolOwnership']} label="院校性质">
-              <Select>
-                <Option value="公办">公办</Option>
-                <Option value="民办">民办</Option>
-                <Option value="港澳台合作">港澳台合作</Option>
-                <Option value="中外合作">中外合作</Option>
-                <Option value="其他/不详">其他/不详</Option>
+              <Select mode="tags" placeholder="请输入或选择省份" style={{ width: '100%' }}>
+                {['浙江', '上海', '江苏', '北京', '广东', '四川'].map(p => (
+                    <Option key={p} value={p}>{p}</Option>
+                ))}
               </Select>
             </Form.Item>
           </Col>
-          <Col span={12}>
-            <Form.Item name={['preference', 'tuitionRange']} label="学费范围">
+          <Col xs={24} sm={12}>
+            <Form.Item name={['preference', 'schoolNature']} label="院校性质">
+              <Select mode="multiple">
+                <Option value="公办">公办</Option>
+                <Option value="民办">民办</Option>
+                <Option value="中外合作">中外合作</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item name={['preference', 'tuitionRange']} label="学费区间">
               <Select>
                 <Option value="无要求">无要求</Option>
                 <Option value="1万以内">1万以内</Option>
@@ -280,33 +239,26 @@ export default function BaseFormSections() {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={12}>
             <Form.Item name={['preference', 'hukou']} label="户口性质">
               <Select>
                 <Option value="城市">城市</Option>
                 <Option value="农村">农村</Option>
-                <Option value="不详">不详</Option>
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8}>
-            <Form.Item name={['preference', 'postGradIntent']} label="考研意向" valuePropName="checked">
-              <Radio.Group>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item name={['preference', 'employmentIntent']} label="就业意向" valuePropName="checked">
-              <Radio.Group>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
+          <Col xs={24} sm={12}>
+            <Form.Item name={['preference', 'careerPlan']} label="读研/就业意向">
+              <Select mode="multiple">
+                <Option value="考研">考研</Option>
+                <Option value="就业">就业</Option>
+                <Option value="出国">出国</Option>
+                <Option value="考公">考公</Option>
+              </Select>
             </Form.Item>
           </Col>
           <Col span={24}>
-            <Form.Item name={['preference', 'otherOptionsNote']} label="其他要求">
+            <Form.Item name={['preference', 'remarks']} label="备注">
               <TextArea rows={2} />
             </Form.Item>
           </Col>

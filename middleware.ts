@@ -1,19 +1,21 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function middleware(request: NextRequest) {
-  // Simple check: if accessing /admin/dashboard directly without a key in query param?
-  // Actually, we are using client-side localStorage for admin key, so we can't verify it in middleware easily
-  // without sending it as a cookie. 
-  // For this simple "Scan-to-Access" model, we rely on API security and Client-side redirect.
-  // Middleware is less critical now, but we can keep it for redirects if needed.
-  
-  // Let's just remove the old logic.
+  const path = request.nextUrl.pathname;
+
+  // Protect all /admin routes except /admin/login
+  if (path.startsWith('/admin') && path !== '/admin/login') {
+    const adminSession = request.cookies.get('admin_session');
+
+    if (!adminSession) {
+      return NextResponse.redirect(new URL('/admin/login', request.url));
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [],
+  matcher: ['/admin/:path*'],
 };
-
