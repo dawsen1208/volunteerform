@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
-import VerificationCode from '@/models/VerificationCode';
 import bcrypt from 'bcryptjs';
 
 export async function POST(req: Request) {
